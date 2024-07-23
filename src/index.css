@@ -1,0 +1,7 @@
+.valid-password-check {
+  color: green;
+}
+
+.invalid-password-check {
+  color: red;
+}
