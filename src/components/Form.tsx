@@ -19,15 +19,16 @@ function Form() {
   const [hasLettersAndNumbers, setHasLettersAndNumbers] = useState(false);
   const [hasSpecialChar, setHasSpecialChar] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
+  const [hidePassword, setHidePassword] = useState(false);
   const minLength = 8;
   const maxLength = 16;
 
   useEffect(() => {
     const storedServices = localStorage.getItem('services');
-    if(storedServices){
-      setServiceObj(JSON.parse(storedServices))
+    if (storedServices) {
+      setServiceObj(JSON.parse(storedServices));
     }
-  }, [])
+  }, []);
 
   const handleShowBtn = () => {
     if (showForm === false) {
@@ -85,17 +86,30 @@ function Form() {
     if (isFormValid()) {
       const newService: Service = { name: service, login, password, url };
       setServiceObj([...serviceObj, newService]);
-      localStorage.setItem('services', JSON.stringify([...serviceObj, newService]))
+      localStorage.setItem(
+        'services',
+        JSON.stringify([...serviceObj, newService]),
+      );
       setService('');
       setLogin('');
       setPassword('');
       setUrl('');
-      setIsMinLength(false)
-      setIsMaxLength(true)
-      setHasLettersAndNumbers(false)
-      setHasSpecialChar(false)
+      setIsMinLength(false);
+      setIsMaxLength(true);
+      setHasLettersAndNumbers(false);
+      setHasSpecialChar(false);
       setShowForm(false);
     }
+  };
+
+  const handleDeleteBtn = (index: number) => {
+    const removeByKey = serviceObj.filter((_, i) => i !== index);
+    setServiceObj(removeByKey);
+    localStorage.setItem('services', JSON.stringify(removeByKey));
+  };
+
+  const handleHidePasswordCheckBox = () => {
+    setHidePassword(!hidePassword);
   };
 
   return (
@@ -193,17 +207,28 @@ function Form() {
         </form>
       )}
       <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={hidePassword}
+            onChange={handleHidePasswordCheckBox}
+          />
+          Esconder senhas
+        </label>
+      </div>
+      <div>
         {serviceObj.length === 0 ? (
           <p>Nenhuma senha cadastrada</p>
         ) : (
           <div>
-            {serviceObj.map((service) => (
-              <ul>
+            {serviceObj.map((service, index) => (
+              <ul className={`${index}`} key={index}>
                 <li>
                   <a href={service.url}>{service.name}</a>
                 </li>
                 <li>{service.login}</li>
-                <li>{service.password}</li>
+                <li>{hidePassword ? '******' : service.password}</li>
+                <button onClick={() => handleDeleteBtn(index)}>Apagar</button>
               </ul>
             ))}
           </div>
