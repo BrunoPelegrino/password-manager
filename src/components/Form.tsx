@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import Swal from 'sweetalert2';
 
 interface Service {
   name: string;
@@ -20,6 +23,7 @@ function Form() {
   const [hasSpecialChar, setHasSpecialChar] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [hidePassword, setHidePassword] = useState(false);
+  const [showInputPsswordText, setShowInputPsswordText] = useState(false);
   const minLength = 8;
   const maxLength = 16;
 
@@ -99,6 +103,14 @@ function Form() {
       setHasLettersAndNumbers(false);
       setHasSpecialChar(false);
       setShowForm(false);
+
+      Swal.fire({
+        title: 'Sucesso',
+        text: 'Serviço cadastrado com sucesso',
+        timer: 1500,
+        showConfirmButton: false,
+        icon: 'success'
+      })
     }
   };
 
@@ -110,6 +122,10 @@ function Form() {
 
   const handleHidePasswordCheckBox = () => {
     setHidePassword(!hidePassword);
+  };
+
+  const handleShowInputPsswordText = () => {
+    setShowInputPsswordText(!showInputPsswordText);
   };
 
   return (
@@ -141,15 +157,32 @@ function Form() {
                 />
               </label>
             </div>
-            <div>
+            <div style={{ position: 'relative' }}>
               <label>
                 Senha
+                <div>
+                  
+                </div>
                 <input
                   name="password"
                   value={password}
                   onChange={handlePasswordInput}
-                  type="password"
+                  type={showInputPsswordText ? 'text' : 'password'}
+                  style={{ paddingRight: '2.5rem' }}
                 />
+                                <span
+                  onClick={handleShowInputPsswordText}
+                  style={{
+                    position: 'relative',
+                    right: '1.5rem',
+                    top: '0.1rem'
+
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={showInputPsswordText ? faEyeSlash : faEye}
+                  />
+                </span>
               </label>
               <ul>
                 <li
