@@ -1,34 +1,55 @@
-import { useState } from "react";
+import { useEffect, useState } from 'react';
+
+interface Service {
+  name: string;
+  login: string;
+  password: string;
+  url: string;
+}
 
 function Form() {
   const [showForm, setShowForm] = useState(false);
   const [service, setService] = useState('');
+  const [serviceObj, setServiceObj] = useState<Service[]>([]);
   const [login, setLogin] = useState('');
+  const [url, setUrl] = useState('');
   const [password, setPassword] = useState('');
   const [isMinLength, setIsMinLength] = useState(false);
   const [isMaxLength, setIsMaxLength] = useState(true);
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [hasLettersAndNumbers, setHasLettersAndNumbers] = useState(false);
   const [hasSpecialChar, setHasSpecialChar] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
   const minLength = 8;
   const maxLength = 16;
 
-  const handleShowBtn = () => {
-    if(showForm === false){
-      setShowForm(true)
+  useEffect(() => {
+    const storedServices = localStorage.getItem('services');
+    if(storedServices){
+      setServiceObj(JSON.parse(storedServices))
     }
-    else setShowForm(false)
-  }
+  }, [])
+
+  const handleShowBtn = () => {
+    if (showForm === false) {
+      setShowForm(true);
+    } else setShowForm(false);
+  };
 
   const handleSerivceInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value
+    const inputValue = e.target.value;
     setService(inputValue);
-  }
+  };
 
   const handleLoginInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value
+    const inputValue = e.target.value;
     setLogin(inputValue);
-  }
+  };
+
+  const handleUrlInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = e.target.value;
+    setUrl(inputValue);
+  };
+
   const verifyPassword = (password: string) => {
     const hasLettersAndNumbers = /(?=.*[a-zA-Z])(?=.*\d)/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
@@ -37,80 +58,157 @@ function Form() {
     setHasLettersAndNumbers(hasLettersAndNumbers);
     setHasSpecialChar(hasSpecialChar);
 
-    if (isMinLength && password.length <= maxLength &&
-      hasLettersAndNumbers && hasSpecialChar 
-    ){
-      setIsPasswordValid(true)
+    if (
+      isMinLength &&
+      password.length <= maxLength &&
+      hasLettersAndNumbers &&
+      hasSpecialChar
+    ) {
+      setIsPasswordValid(true);
     }
-  }
+  };
 
   const handlePasswordInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value
+    const inputValue = e.target.value;
     setPassword(inputValue);
     verifyPassword(inputValue);
-  }
+  };
 
   const isFormValid = () => {
-    if(service !== '' && login !== '' && password !== '' && isPasswordValid){
-      return true
-  }
-  else false
-  }
+    if (service !== '' && login !== '' && password !== '' && isPasswordValid) {
+      return true;
+    } else false;
+  };
+
+  const handleRegisterBtn = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isFormValid()) {
+      const newService: Service = { name: service, login, password, url };
+      setServiceObj([...serviceObj, newService]);
+      localStorage.setItem('services', JSON.stringify([...serviceObj, newService]))
+      setService('');
+      setLogin('');
+      setPassword('');
+      setUrl('');
+      setIsMinLength(false)
+      setIsMaxLength(true)
+      setHasLettersAndNumbers(false)
+      setHasSpecialChar(false)
+      setShowForm(false);
+    }
+  };
 
   return (
     <div>
-      {showForm === false ? (<button onClick={handleShowBtn}>
-        Cadastrar nova senha
-        </button>) :
-     (<form>
-      <fieldset>
-        <div>
-        <label>Nome do Serviço
-        <input type="text"
-        value={service} 
-        onChange={handleSerivceInput}
-        />
-        </label>
-        </div>
-        <div>
-        <label>Login
-        <input 
-        value={login}
-        onChange={handleLoginInput}
-        type="text" />
-        </label>
-        </div>
-        <div>
-        <label>Senha
-        <input
-        value={password}
-        onChange={handlePasswordInput} 
-        type="password" />
-        </label>
-        <ul>
-        <li className={isMinLength ? "valid-password-check" : "invalid-password-check"}>
-          Possuir 8 ou mais caracteres
-        </li>
-        <li className={isMaxLength ? "valid-password-check" : "invalid-password-check"}>
-          Possuir até 16 caracteres
-        </li>
-        <li className={hasLettersAndNumbers ? "valid-password-check" : "invalid-password-check"}>
-          Possuir letras e números
-          </li>
-        <li className={hasSpecialChar ? "valid-password-check" : "invalid-password-check"}>
-          Possuir algum caractere especial
-          </li>
-        </ul>
-        </div>
-        <label>URL
-        <input type="text" />
-        </label>
-        <button
-        disabled={!isFormValid()}
-        >Cadastrar</button>
-        <button onClick={handleShowBtn} >Cancelar</button>
-      </fieldset>
-    </form>)}
+      {showForm === false ? (
+        <button onClick={handleShowBtn}>Cadastrar nova senha</button>
+      ) : (
+        <form>
+          <fieldset>
+            <div>
+              <label>
+                Nome do Serviço
+                <input
+                  type="text"
+                  name="service"
+                  value={service}
+                  onChange={handleSerivceInput}
+                />
+              </label>
+            </div>
+            <div>
+              <label>
+                Login
+                <input
+                  name="login"
+                  value={login}
+                  onChange={handleLoginInput}
+                  type="text"
+                />
+              </label>
+            </div>
+            <div>
+              <label>
+                Senha
+                <input
+                  name="password"
+                  value={password}
+                  onChange={handlePasswordInput}
+                  type="password"
+                />
+              </label>
+              <ul>
+                <li
+                  className={
+                    isMinLength
+                      ? 'valid-password-check'
+                      : 'invalid-password-check'
+                  }
+                >
+                  Possuir 8 ou mais caracteres
+                </li>
+                <li
+                  className={
+                    isMaxLength
+                      ? 'valid-password-check'
+                      : 'invalid-password-check'
+                  }
+                >
+                  Possuir até 16 caracteres
+                </li>
+                <li
+                  className={
+                    hasLettersAndNumbers
+                      ? 'valid-password-check'
+                      : 'invalid-password-check'
+                  }
+                >
+                  Possuir letras e números
+                </li>
+                <li
+                  className={
+                    hasSpecialChar
+                      ? 'valid-password-check'
+                      : 'invalid-password-check'
+                  }
+                >
+                  Possuir algum caractere especial
+                </li>
+              </ul>
+            </div>
+            <label>
+              URL
+              <input
+                name="url"
+                onChange={handleUrlInput}
+                value={url}
+                type="text"
+              />
+            </label>
+            <button onClick={handleRegisterBtn} disabled={!isFormValid()}>
+              Cadastrar
+            </button>
+            <button onClick={handleShowBtn}>Cancelar</button>
+          </fieldset>
+        </form>
+      )}
+      <div>
+        {serviceObj.length === 0 ? (
+          <p>Nenhuma senha cadastrada</p>
+        ) : (
+          <div>
+            {serviceObj.map((service) => (
+              <ul>
+                <li>
+                  <a href={service.url}>{service.name}</a>
+                </li>
+                <li>{service.login}</li>
+                <li>{service.password}</li>
+              </ul>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
