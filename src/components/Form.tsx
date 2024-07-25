@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
+import ServiceInput from './serviceInput/ServiceInput';
+import PasswrodInput from './passwordInput/PasswordInput';
 
 interface Service {
   name: string;
@@ -23,7 +23,6 @@ function Form() {
   const [hasSpecialChar, setHasSpecialChar] = useState(false);
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [hidePassword, setHidePassword] = useState(false);
-  const [showInputPsswordText, setShowInputPsswordText] = useState(false);
   const minLength = 8;
   const maxLength = 16;
 
@@ -109,8 +108,8 @@ function Form() {
         text: 'Serviço cadastrado com sucesso',
         timer: 1500,
         showConfirmButton: false,
-        icon: 'success'
-      })
+        icon: 'success',
+      });
     }
   };
 
@@ -124,10 +123,6 @@ function Form() {
     setHidePassword(!hidePassword);
   };
 
-  const handleShowInputPsswordText = () => {
-    setShowInputPsswordText(!showInputPsswordText);
-  };
-
   return (
     <div>
       {showForm === false ? (
@@ -135,55 +130,10 @@ function Form() {
       ) : (
         <form>
           <fieldset>
+            <ServiceInput name='service' label='Nome do Serviço' type='text' value={service} onChange={handleSerivceInput} />
+            <ServiceInput name='login' label='Login' type='text' value={login} onChange={handleLoginInput} />
             <div>
-              <label>
-                Nome do Serviço
-                <input
-                  type="text"
-                  name="service"
-                  value={service}
-                  onChange={handleSerivceInput}
-                />
-              </label>
-            </div>
-            <div>
-              <label>
-                Login
-                <input
-                  name="login"
-                  value={login}
-                  onChange={handleLoginInput}
-                  type="text"
-                />
-              </label>
-            </div>
-            <div style={{ position: 'relative' }}>
-              <label>
-                Senha
-                <div>
-                  
-                </div>
-                <input
-                  name="password"
-                  value={password}
-                  onChange={handlePasswordInput}
-                  type={showInputPsswordText ? 'text' : 'password'}
-                  style={{ paddingRight: '2.5rem' }}
-                />
-                                <span
-                  onClick={handleShowInputPsswordText}
-                  style={{
-                    position: 'relative',
-                    right: '1.5rem',
-                    top: '0.1rem'
-
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={showInputPsswordText ? faEyeSlash : faEye}
-                  />
-                </span>
-              </label>
+            <PasswrodInput name='password' label='Senha' value={password} onChange={handlePasswordInput} />
               <ul>
                 <li
                   className={
@@ -223,15 +173,7 @@ function Form() {
                 </li>
               </ul>
             </div>
-            <label>
-              URL
-              <input
-                name="url"
-                onChange={handleUrlInput}
-                value={url}
-                type="text"
-              />
-            </label>
+            <ServiceInput name='url' label='URL' type='text' value={url} onChange={handleUrlInput} />
             <button onClick={handleRegisterBtn} disabled={!isFormValid()}>
               Cadastrar
             </button>
@@ -239,21 +181,22 @@ function Form() {
           </fieldset>
         </form>
       )}
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={hidePassword}
-            onChange={handleHidePasswordCheckBox}
-          />
-          Esconder senhas
-        </label>
-      </div>
+
       <div>
         {serviceObj.length === 0 ? (
           <p>Nenhuma senha cadastrada</p>
         ) : (
           <div>
+            <div>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={hidePassword}
+                  onChange={handleHidePasswordCheckBox}
+                />
+                Esconder senhas
+              </label>
+            </div>
             {serviceObj.map((service, index) => (
               <ul className={`${index}`} key={index}>
                 <li>
