@@ -3,44 +3,40 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 interface PasswordInputProps {
-    password?: string;
-    label: string;
-    value: string;
-    type?: string;
-    name: string;
-    style?: object;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  }
+  password?: string;
+  label: string;
+  value: string;
+  name: string;
+  style?: object;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
-function PasswrodInput({password, label, name, style, onChange}: PasswordInputProps) {
+function PasswordInput({ password, label, name, style, onChange }: PasswordInputProps) {
+  const [showInputPasswordText, setShowInputPasswordText] = useState(false);
 
-    const [showInputPsswordText, setShowInputPsswordText] = useState(false);
+  const handleShowInputPasswordText = () => {
+    setShowInputPasswordText(!showInputPasswordText);
+  };
 
-    const handleShowInputPsswordText = () => {
-        setShowInputPsswordText(!showInputPsswordText);
-      };
+  return (
+    <div className="mb-3" style={{ position: 'relative' }}>
+      <label className="form-label">
+        {label}
+        <input type={showInputPasswordText ? 'text' : 'password'} name={name} value={password} onChange={onChange} style={style} className="form-control" />
+        <span
+          onClick={handleShowInputPasswordText}
+          style={{
+            position: 'absolute',
+            right: '10px',
+            top: '36px',
+            cursor: 'pointer'
+          }}
+        >
+          <FontAwesomeIcon icon={showInputPasswordText ? faEyeSlash : faEye} />
+        </span>
+      </label>
+    </div>
+  );
+}
 
-    return (
-      <div style={{ position: 'relative' }}>
-        <label>
-            {label}
-            <input type={showInputPsswordText ? 'text' : 'password'} name={name} value={password} onChange={onChange} style={style}/>
-            <span
-                  onClick={handleShowInputPsswordText}
-                  style={{
-                    position: 'relative',
-                    right: '1.5rem',
-                    top: '0.1rem',
-                  }}
-                >
-                  <FontAwesomeIcon
-                    icon={showInputPsswordText ? faEyeSlash : faEye}
-                  />
-                </span>
-               
-        </label>
-      </div>
-    );
-  }
-  
-  export default PasswrodInput;
+export default PasswordInput;

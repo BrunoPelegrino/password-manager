@@ -1,7 +1,8 @@
-.valid-password-check {
-  color: #aeffb6;
-}
 
-.invalid-password-check {
-  color: #f58989;
-}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  

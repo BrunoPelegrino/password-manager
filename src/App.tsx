@@ -1,15 +1,16 @@
-import './App.css';
-import Title from './components/Title';
-import Form from './components/Form';
-
+import './index.css';
+import './App.css'
+import Title from './components/title/Title';
+import Form from './components/form/Form';
 
 function App() {
   return (
-    <>
+    <div className="app-container">
       <Title />
-      <Form />
-    </>
-
+      <div className="center-content">
+        <Form />
+      </div>
+    </div>
   );
 }
 

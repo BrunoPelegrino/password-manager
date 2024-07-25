@@ -4,8 +4,8 @@ type ServiceInputProps = {
   type: string;
   value: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
-  style?: object
-  // onClick: React.MouseEventHandler<HTMLSpanElement>;
+  style?: object;
+  className?: string;
 };
 
 function ServiceInput({
@@ -15,13 +15,12 @@ function ServiceInput({
   value,
   onChange,
   style
-  // onClick,
 }: ServiceInputProps) {
   return (
-    <div>
-      <label>
+    <div className="mb-3">
+      <label className="form-label">
         {label}
-        <input type={type} name={name} value={value} onChange={onChange} style={style} />
+        <input  type={type} name={name} value={value} onChange={onChange} style={style} className="form-control"  />
       </label>
     </div>
   );
