@@ -14,13 +14,14 @@ function ServiceInput({
   name,
   value,
   onChange,
-  style
+  style,
+  className,
 }: ServiceInputProps) {
   return (
-    <div className="mb-3">
+    <div className={`mb-3 ${className}`}>
       <label className="form-label">
         {label}
-        <input  type={type} name={name} value={value} onChange={onChange} style={style} className="form-control"  />
+        <input type={type} name={name} value={value} onChange={onChange} style={style} className={`${className} form-control`} />
       </label>
     </div>
   );
