@@ -3,6 +3,8 @@ import Swal from 'sweetalert2';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import ServiceInput from '../serviceInput/ServiceInput';
 import PasswrodInput from '../passwordInput/PasswordInput';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 interface Service {
   name: string;
@@ -118,79 +120,84 @@ function Form() {
       {showForm === false ? (
         <div className="button-new-pass">
           <button onClick={handleShowBtn} className="btn btn-primary">Cadastrar nova senha</button>
-          <label className="hide-password-checkbox">
-            <input
-              type="checkbox"
-              checked={hidePassword}
-              onChange={handleHidePasswordCheckBox}
-            />
-            Esconder Senhas
-          </label>
         </div>
       ) : (
-<div className="form-container">
-  <form>
-    <fieldset>
-        <ServiceInput
-          name='service'
-          label='Nome do Serviço'
-          type='text'
-          value={service}
-          onChange={handleSerivceInput}
-          
-        />
-      <div className="input-container">
-      <ServiceInput
-          name='login'
-          label='Login'
-          type='text'
-          value={login}
-          onChange={handleLoginInput}
-        />
-          <PasswrodInput
-            name='password'
-            label='Senha'
-            value={password}
-            onChange={handlePasswordInput}
-          />
-          <div className="password-validations">
-          <ul>
-            <li className={isMinLength ? 'valid-password-check' : 'invalid-password-check'}>
-              Possuir 8 ou mais caracteres
-            </li>
-            <li className={isMaxLength ? 'valid-password-check' : 'invalid-password-check'}>
-              Possuir até 16 caracteres
-            </li>
-            <li className={hasLettersAndNumbers ? 'valid-password-check' : 'invalid-password-check'}>
-              Possuir letras e números
-            </li>
-            <li className={hasSpecialChar ? 'valid-password-check' : 'invalid-password-check'}>
-              Possuir algum caractere especial
-            </li>
-          </ul>
+        <div className="form-container">
+          <form>
+            <fieldset>
+              <ServiceInput
+                name='service'
+                label='Nome do Serviço'
+                type='text'
+                value={service}
+                onChange={handleSerivceInput}
+                className="wide-input"
+              />
+              <div className="input-container">
+                <ServiceInput
+                  name='login'
+                  label='Login'
+                  type='text'
+                  value={login}
+                  onChange={handleLoginInput}
+                />
+                <PasswrodInput
+                  name='password'
+                  label='Senha'
+                  value={password}
+                  onChange={handlePasswordInput}
+                />
+                <div className="password-validations">
+                  <ul>
+                    <li className={isMinLength ? 'valid-password-check' : 'invalid-password-check'}>
+                      Possuir 8 ou mais caracteres
+                    </li>
+                    <li className={hasLettersAndNumbers ? 'valid-password-check' : 'invalid-password-check'}>
+                      Possuir letras e números
+                    </li>
+                    <li className={hasSpecialChar ? 'valid-password-check' : 'invalid-password-check'}>
+                      Possuir algum caractere especial
+                    </li>
+                    <li className={isMaxLength ? 'valid-password-check' : 'invalid-password-check'}>
+                      Possuir até 16 caracteres
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div className="input-group">
+                <ServiceInput
+                  name='url'
+                  label='URL'
+                  type='text'
+                  value={url}
+                  onChange={handleUrlInput}
+                  className="url-input"
+                />
+              </div>
+              <div className="button-container">
+                <button className="btn btn-primary" onClick={handleRegisterBtn} disabled={!isFormValid()}>
+                  Cadastrar
+                </button>
+                <button className="btn btn-secondary" onClick={handleShowBtn}>Cancelar</button>
+              </div>
+            </fieldset>
+          </form>
         </div>
-      </div>
-      <div className="input-group">
-        <ServiceInput
-          name='url'
-          label='URL'
-          type='text'
-          value={url}
-          onChange={handleUrlInput}
-          className="url-input"
-        />
-      </div>
-      <div className="button-container">
-        <button className="btn btn-primary" onClick={handleRegisterBtn} disabled={!isFormValid()}>
-          Cadastrar
-        </button>
-        <button className="btn btn-secondary" onClick={handleShowBtn}>Cancelar</button>
-      </div>
-    </fieldset>
-  </form>
-</div>
-
       )}
+
+      <div className="form-check form-switch hide-password-checkbox">
+        <input
+          className='form-check-input'
+          role='switch'
+          id="flexSwitchCheckDefault"
+          type="checkbox"
+          checked={hidePassword}
+          onChange={handleHidePasswordCheckBox}
+        />
+        <label className="form-check-label">
+          Esconder Senhas
+        </label>
+      </div>
 
       <div className="cards-container">
         {serviceObj.length === 0 ? (
@@ -202,7 +209,9 @@ function Form() {
                 <p className="card-text">Serviço: <a href={service.url} className="card-link">{service.name}</a></p>
                 <p className="card-text">Login: {service.login}</p>
                 <p className="card-text">Senha: {hidePassword ? '******' : service.password}</p>
-                <button className="btn btn-danger" onClick={() => handleDeleteBtn(index)}>Apagar</button>
+                <button className="btn btn-icon" onClick={() => handleDeleteBtn(index)}>
+                  <FontAwesomeIcon icon={faTrash} style={{ color: '#db4d4d' }} />
+                </button>
               </div>
             </div>
           ))
